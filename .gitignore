@@ -1,9 +1,2 @@
-node_modules/
-.next/
-out/
-dist/
-*.log
-.env*
-.DS_Store
-*.tgz
-*.tar.gz
+# Output directory
+docs/

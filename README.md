@@ -1,66 +1,120 @@
-# Naoto Nishihama's Portfolio & Blog
+# Portfolio & Blog
 
-Next.js、Tailwind CSS、MDXを使用して構築されたポートフォリオ&ブログサイトです。
+A portfolio and blog site built with a static site generator written in Go.
 
-## 🚀 技術スタック
+## 🚀 Tech Stack
 
-- **Next.js 14** - React フレームワーク
-- **TypeScript** - 型安全な開発
-- **Tailwind CSS** - ユーティリティファーストCSS
-- **MDX** - Markdown + JSX for ブログ
-- **Lucide React** - アイコン
+- **Go 1.25** - Static site generation
+- **goldmark** - Markdown parser
+- **yaml.v3** - YAML configuration files
+- **GitHub Actions** - CI/CD
+- **GitHub Pages** - Hosting
 
-## 📦 機能
+## 📦 Features
 
-- **レスポンシブデザイン** - モバイルファーストで最適化
-- **ポートフォリオ** - プロジェクト一覧とスキル紹介
-- **ブログ** - MDXベースの技術ブログ
-- **お問い合わせ** - コンタクトフォーム
-- **SEO最適化** - メタタグとサイトマップ
+- **Responsive Design** - Mobile-first optimization
+- **Blog** - Markdown-based technical blog
+- **Fast Build** - High-speed static site generation with Go
+- **Auto Deploy** - Automatic build and deployment with GitHub Actions on push
 
-## 🛠️ 開発・デプロイ
+## 🛠️ Development & Deployment
 
-### ローカル開発
+### Install Dependencies
 
 ```bash
-# 依存関係のインストール
-npm install
-
-# 開発サーバーの起動
-npm run dev
+go mod download
 ```
 
-### ビルド・デプロイ
+### Generate Site Locally
 
 ```bash
-# 本番ビルド
-npm run build
+go run main.go
+```
 
-# GitHub Pagesへの自動デプロイ
+The generated site will be output to the `docs/` directory.
+
+### Local Preview
+
+```bash
+# Preview with Go's simple server
+go run main.go -serve
+
+# Or specify a port number
+go run main.go -serve -port 3000
+
+# Open http://localhost:8000 in your browser
+```
+
+### Deploy to GitHub Pages
+
+When you push to the `main` branch, GitHub Actions automatically builds and deploys the site.
+
+```bash
+git add .
+git commit -m "Update content"
 git push origin main
 ```
 
-## 📝 ブログ記事の追加
+## 📝 Content Management
 
-`content/blog/` ディレクトリに `.md` ファイルを追加してください。
+### Configuration File
+
+Configure basic site information in `config.yaml`.
+
+```yaml
+name: "Your Name"
+title: "Portfolio & Blog"
+description: "Software Engineer | Go, TypeScript, Cloud"
+github: "https://github.com/yourusername"
+```
+
+### Adding Blog Posts
+
+Add `.md` files to the `content/blog/` directory.
 
 ```markdown
 ---
-title: "記事タイトル"
-date: "2024-07-26"
-excerpt: "記事の概要"
+title: "Post Title"
+date: "2025-10-18"
+description: "Post summary"
 tags: ["Tag1", "Tag2"]
 ---
 
-# 記事の内容
+# Post Content
 
-Markdownで記事を書きます。
+Write your post in Markdown.
 ```
 
-## 🌍 デプロイ
+## 🏗️ Project Structure
 
-このサイトはGitHub Pagesで自動デプロイされます。`main` ブランチにプッシュすると、GitHub Actionsが自動的にビルド・デプロイを実行します。
+```
+.
+├── main.go                 # Main program
+├── go.mod                  # Go module definition
+├── config.yaml             # Site configuration
+├── content/
+│   ├── blog/              # Blog posts (Markdown)
+│   │   ├── hello-world.md
+│   │   └── golang-best-practices.md
+├── docs/                  # Generated HTML (for GitHub Pages)
+│   ├── index.html
+│   ├── css/
+│   │   └── style.css
+│   └── blog/
+│       ├── hello-world.html
+│       └── golang-best-practices.html
+├── .github/
+│   └── workflows/
+│       └── deploy.yml     # GitHub Actions configuration
+└── README.md
+```
 
-## 📄 ライセンス
+## 🌍 GitHub Pages Setup
+
+1. Go to your GitHub repository Settings → Pages
+2. Source: Select "GitHub Actions"
+3. Automatic deployment occurs when pushing to the `main` branch
+
+## 📄 License
 
 This project is licensed under the MIT License.
