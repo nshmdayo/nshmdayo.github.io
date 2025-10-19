@@ -40,6 +40,26 @@ type PageData struct {
 	Post   *Post
 }
 
+type TemplateFile struct {
+	name      string
+	root      string
+	extension string
+}
+
+type OutputFile struct {
+	name      string
+	root      string
+	dir       string
+	extension string
+}
+
+var styleTpl = TemplateFile{name: "style", root: "template/", extension: ".css"}
+var indexTpl = TemplateFile{name: "index", root: "template/", extension: ".html"}
+var postTpl = TemplateFile{name: "post", root: "template/", extension: ".html"}
+var styleDoc = OutputFile{name: "style", root: "docs/", dir: "css/", extension: ".css"}
+var indexDoc = OutputFile{name: "index", root: "docs/", dir: "", extension: ".html"}
+var blogDoc = OutputFile{name: "", root: "docs/", dir: "blog/", extension: ".html"}
+
 func main() {
 	// コマンドラインフラグの定義
 	serve := flag.Bool("serve", false, "ローカルサーバーを起動してプレビュー")
@@ -70,10 +90,10 @@ func buildSite() {
 	posts, _ := loadPosts("content/blog")
 
 	// CSSファイルの生成
-	generateCSS()
+	generateCSS(styleTpl, styleDoc)
 
 	// ページの生成
-	generateIndexPage(config, posts)
+	generateIndexPage(indexTpl, indexDoc, config, posts)
 	generateBlogPages(config, posts)
 }
 
@@ -175,15 +195,15 @@ func parsePost(path string) (Post, error) {
 	return post, nil
 }
 
-func generateCSS() {
-	tmpl, err := template.ParseFiles("template/style.css.tpl")
+func generateCSS(input TemplateFile, output OutputFile) {
+	tmpl, err := template.ParseFiles(input.root + input.name + input.extension + ".tpl")
 	if err != nil {
-		log.Fatalf("Error parsing css.tpl: %v", err)
+		log.Fatalf("Error parsing %s: %v", input.root+input.name+input.extension+".tpl", err)
 	}
 
-	f, err := os.Create("docs/css/style.css")
+	f, err := os.Create(output.root + output.dir + output.name + output.extension)
 	if err != nil {
-		log.Fatalf("Error creating style.css: %v", err)
+		log.Fatalf("Error creating %s: %v", output.root+output.dir+output.name+output.extension+".tpl", err)
 	}
 	defer f.Close()
 
@@ -192,15 +212,15 @@ func generateCSS() {
 	}
 }
 
-func generateIndexPage(config Config, posts []Post) {
-	tmpl, err := template.ParseFiles("template/index.html.tpl")
+func generateIndexPage(input TemplateFile, output OutputFile, config Config, posts []Post) {
+	tmpl, err := template.ParseFiles(input.root + input.name + input.extension + ".tpl")
 	if err != nil {
 		log.Fatalf("Error parsing index.html.tpl: %v", err)
 	}
 
-	f, err := os.Create("docs/index.html")
+	f, err := os.Create(output.root + output.dir + output.name + output.extension)
 	if err != nil {
-		log.Fatalf("Error creating index.html: %v", err)
+		log.Fatalf("Error creating %s: %v", output.root+output.dir+output.name+output.extension+".tpl", err)
 	}
 	defer f.Close()
 
