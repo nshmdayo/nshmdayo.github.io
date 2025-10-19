@@ -56,9 +56,9 @@ type OutputFile struct {
 var styleTpl = TemplateFile{name: "style", root: "template/", extension: ".css"}
 var indexTpl = TemplateFile{name: "index", root: "template/", extension: ".html"}
 var postTpl = TemplateFile{name: "post", root: "template/", extension: ".html"}
-var styleDoc = OutputFile{name: "style", root: "docs/", dir: "css/", extension: ".css"}
-var indexDoc = OutputFile{name: "index", root: "docs/", dir: "", extension: ".html"}
-var blogDoc = OutputFile{name: "", root: "docs/", dir: "blog/", extension: ".html"}
+var styleArt = OutputFile{name: "style", root: "artifact/", dir: "css/", extension: ".css"}
+var indexArt = OutputFile{name: "index", root: "artifact/", dir: "", extension: ".html"}
+var blogDoc = OutputFile{name: "", root: "artifact/", dir: "blog/", extension: ".html"}
 
 func main() {
 	// コマンドラインフラグの定義
@@ -76,10 +76,9 @@ func main() {
 }
 
 func buildSite() {
-	// ディレクトリの作成
-	os.MkdirAll("docs", 0755)
-	os.MkdirAll("docs/blog", 0755)
-	os.MkdirAll("docs/css", 0755)
+	os.MkdirAll(indexArt.root, 0755)
+	os.MkdirAll(indexArt.root+indexArt.dir, 0755)
+	os.MkdirAll(styleArt.root+styleArt.dir, 0755)
 
 	// 設定ファイルの読み込み
 	config, err := loadConfig("config.yaml")
@@ -89,32 +88,21 @@ func buildSite() {
 	// ブログ記事の読み込み
 	posts, _ := loadPosts("content/blog")
 
-	// CSSファイルの生成
-	generateCSS(styleTpl, styleDoc)
+	generateCSS(styleTpl, styleArt)
 
-	// ページの生成
-	generateIndexPage(indexTpl, indexDoc, config, posts)
+	generateIndexPage(indexTpl, indexArt, config, posts)
 	generateBlogPages(config, posts)
 }
 
 func startServer(port string) {
-	// docsディレクトリが存在しない場合は先に生成
-	if _, err := os.Stat("docs"); os.IsNotExist(err) {
-		log.Println("📝 docsディレクトリが見つかりません。サイトを生成します...")
+	if _, err := os.Stat("artifact"); os.IsNotExist(err) {
 		buildSite()
-		fmt.Println("✅ サイトが生成されました！")
-		fmt.Println()
 	}
 
-	// 静的ファイルサーバーの設定
-	fs := http.FileServer(http.Dir("docs"))
+	fs := http.FileServer(http.Dir("artifact"))
 	http.Handle("/", fs)
 
 	addr := ":" + port
-	fmt.Println("🚀 ローカルサーバーを起動しました")
-	fmt.Printf("📍 http://localhost%s\n", addr)
-	fmt.Println("⏹  停止するには Ctrl+C を押してください")
-	fmt.Println()
 
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatal(err)
