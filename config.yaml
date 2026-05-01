@@ -2,3 +2,29 @@ name: "Nish"
 description: "Software Engineer / Human-Computer Interaction Enthusiast"
 github: "https://github.com/nshmdayo"
 Bluesky: "https://bsky.app/profile/nshmdayo.bsky.social"
+about: "ソフトウェアエンジニアとして、使いやすいプロダクトを作ることに情熱を持っています。Human-Computer Interaction に関心があり、技術と人の間にある橋渡しを大切にしています。"
+
+skills:
+  - category: "Backend"
+    items: ["Go", "Python", "Node.js", "PostgreSQL", "Redis"]
+  - category: "Frontend"
+    items: ["TypeScript", "React", "HTML/CSS"]
+  - category: "Infrastructure"
+    items: ["Docker", "Kubernetes", "GCP", "GitHub Actions"]
+
+projects:
+  - title: "nshmdayo.github.io"
+    description: "Goで作ったシンプルな静的サイトジェネレーター。テンプレートとYAML設定でポートフォリオ・ブログを生成します。"
+    tech: ["Go", "HTML", "CSS"]
+    github: "https://github.com/nshmdayo/nshmdayo.github.io"
+    url: ""
+  - title: "HCI Research Tool"
+    description: "ユーザーインターフェースの使いやすさを評価するためのリサーチツール。ヒートマップや操作ログの可視化機能を持ちます。"
+    tech: ["TypeScript", "React", "Python"]
+    github: ""
+    url: ""
+  - title: "Dev Automation Scripts"
+    description: "開発ワークフローを自動化するCLIツール集。コードレビュー補助やリリース作業の効率化を目的としています。"
+    tech: ["Go", "Shell"]
+    github: ""
+    url: ""
