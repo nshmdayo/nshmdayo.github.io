@@ -2,29 +2,21 @@ name: "Nish"
 description: "Software Engineer / Human-Computer Interaction Enthusiast"
 github: "https://github.com/nshmdayo"
 Bluesky: "https://bsky.app/profile/nshmdayo.bsky.social"
-about: "ソフトウェアエンジニアとして、使いやすいプロダクトを作ることに情熱を持っています。Human-Computer Interaction に関心があり、技術と人の間にある橋渡しを大切にしています。"
-
-skills:
-  - category: "Backend"
-    items: ["Go", "Python", "Node.js", "PostgreSQL", "Redis"]
-  - category: "Frontend"
-    items: ["TypeScript", "React", "HTML/CSS"]
-  - category: "Infrastructure"
-    items: ["Docker", "Kubernetes", "GCP", "GitHub Actions"]
+about: "As a software engineer, I am passionate about building easy-to-use products. I have a keen interest in Human-Computer Interaction and value bridging the gap between technology and people."
 
 projects:
   - title: "nshmdayo.github.io"
-    description: "Goで作ったシンプルな静的サイトジェネレーター。テンプレートとYAML設定でポートフォリオ・ブログを生成します。"
+    description: "A simple static site generator built with Go. Generates portfolios and blogs using templates and YAML configuration."
     tech: ["Go", "HTML", "CSS"]
     github: "https://github.com/nshmdayo/nshmdayo.github.io"
     url: ""
   - title: "HCI Research Tool"
-    description: "ユーザーインターフェースの使いやすさを評価するためのリサーチツール。ヒートマップや操作ログの可視化機能を持ちます。"
+    description: "A research tool for evaluating the usability of user interfaces. Features heatmap and operation log visualization."
     tech: ["TypeScript", "React", "Python"]
     github: ""
     url: ""
   - title: "Dev Automation Scripts"
-    description: "開発ワークフローを自動化するCLIツール集。コードレビュー補助やリリース作業の効率化を目的としています。"
+    description: "A collection of CLI tools for automating development workflows. Designed to assist with code reviews and streamline release processes."
     tech: ["Go", "Shell"]
     github: ""
     url: ""

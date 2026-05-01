@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,21 +26,7 @@
                 {{if .Config.About}}<p class="about">{{.Config.About}}</p>{{end}}
             </section>
 
-            {{if .Config.Skills}}
-            <section>
-                <h2>Skills</h2>
-                <div class="skills">
-                    {{range .Config.Skills}}
-                    <div class="skill-row">
-                        <span class="skill-category">{{.Category}}</span>
-                        <span class="skill-items">{{range $i, $v := .Items}}{{if $i}}, {{end}}{{$v}}{{end}}</span>
-                    </div>
-                    {{end}}
-                </div>
-            </section>
-            {{end}}
-
-            {{if .Config.Projects}}
+{{if .Config.Projects}}
             <section>
                 <h2>Projects</h2>
                 <ul class="project-list">
