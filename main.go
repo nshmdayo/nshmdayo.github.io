@@ -77,8 +77,8 @@ var indexArt = OutputFile{name: "index", root: "artifact/", dir: "", extension: 
 var blogDoc = OutputFile{name: "", root: "artifact/", dir: "blog/", extension: ".html"}
 
 func main() {
-	serve := flag.Bool("serve", false, "ローカルサーバーを起動してプレビュー")
-	port := flag.String("port", "8000", "サーバーのポート番号")
+	serve := flag.Bool("serve", false, "Start local server for preview")
+	port := flag.String("port", "8000", "Server port number")
 	flag.Parse()
 
 	if *serve {
