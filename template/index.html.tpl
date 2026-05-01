@@ -3,48 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Not a Shell</title>
+    <title>{{.Config.Name}}</title>
     <meta name="description" content="{{.Config.Description}}">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="hero">
-        <div class="container" style="text-align: left;">
-            <h2>Hello</h2>
-            <h2>I'm {{.Config.Name}},</h2>
-            <h2>not the command-line kind.</h2>
-            <p>{{.Config.Description}}</p>
-        </div>
-    </div>
+    <div class="page">
+        <header>
+            <nav>
+                <a href="/" class="nav-home">{{.Config.Name}}</a>
+                <div class="nav-links">
+                    {{if .Config.GitHub}}<a href="{{.Config.GitHub}}" target="_blank">GitHub</a>{{end}}
+                    {{if .Config.Bluesky}}<a href="{{.Config.Bluesky}}" target="_blank">Bluesky</a>{{end}}
+                </div>
+            </nav>
+        </header>
 
-    <main class="container">
-        <div class="social-links">
-            {{if .Config.GitHub}}<a href="{{.Config.GitHub}}" target="_blank">GitHub</a>{{end}}
-            {{if .Config.Bluesky}}<a href="{{.Config.Bluesky}}" target="_blank">Bluesky</a>{{end}}
-        </div>
+        <main>
+            <section class="intro">
+                <h1>{{.Config.Name}}</h1>
+                <p>{{.Config.Description}}</p>
+                {{if .Config.About}}<p class="about">{{.Config.About}}</p>{{end}}
+            </section>
 
-        {{if .Posts}}
-        <section id="blog">
-            <h2>Latest Blog Posts</h2>
-            <div class="grid">
-                {{range .Posts}}
-                <div class="card">
-                    <h3><a href="blog/{{.Slug}}.html">{{.Title}}</a></h3>
-                    <div class="date">{{.Date}}</div>
-                    <p>{{.Description}}</p>
-                    {{if .Tags}}
-                    <div class="tags">
-                        {{range .Tags}}
-                        <span class="tag">{{.}}</span>
-                        {{end}}
+            {{if .Config.Skills}}
+            <section>
+                <h2>Skills</h2>
+                <div class="skills">
+                    {{range .Config.Skills}}
+                    <div class="skill-row">
+                        <span class="skill-category">{{.Category}}</span>
+                        <span class="skill-items">{{range $i, $v := .Items}}{{if $i}}, {{end}}{{$v}}{{end}}</span>
                     </div>
                     {{end}}
-                    <a href="blog/{{.Slug}}.html" class="btn">Read More</a>
                 </div>
-                {{end}}
-            </div>
-        </section>
-        {{end}}
-    </main>
+            </section>
+            {{end}}
+
+            {{if .Config.Projects}}
+            <section>
+                <h2>Projects</h2>
+                <ul class="project-list">
+                    {{range .Config.Projects}}
+                    <li class="project-item">
+                        <div class="project-title-row">
+                            <span class="project-name">{{.Title}}</span>
+                            <span class="project-links">
+                                {{if .GitHub}}<a href="{{.GitHub}}" target="_blank">↗ GitHub</a>{{end}}
+                                {{if .URL}}<a href="{{.URL}}" target="_blank">↗ Live</a>{{end}}
+                            </span>
+                        </div>
+                        <p class="project-desc">{{.Description}}</p>
+                        <p class="project-tech">{{range $i, $v := .Tech}}{{if $i}} · {{end}}{{$v}}{{end}}</p>
+                    </li>
+                    {{end}}
+                </ul>
+            </section>
+            {{end}}
+
+            {{if .Posts}}
+            <section>
+                <h2>Writing</h2>
+                <ul class="post-list">
+                    {{range .Posts}}
+                    <li class="post-item">
+                        <a href="blog/{{.Slug}}.html">{{.Title}}</a>
+                        <span class="post-date">{{.Date}}</span>
+                    </li>
+                    {{end}}
+                </ul>
+            </section>
+            {{end}}
+        </main>
+
+        <footer>
+            <p>{{.Config.Name}}</p>
+        </footer>
+    </div>
 </body>
 </html>

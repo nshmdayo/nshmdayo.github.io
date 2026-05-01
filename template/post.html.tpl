@@ -3,29 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Post.Title}} - {{.Config.Name}}</title>
+    <title>{{.Post.Title}} — {{.Config.Name}}</title>
     <meta name="description" content="{{.Post.Description}}">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <main class="container">
-        <article>
+    <div class="page">
+        <header>
+            <nav>
+                <a href="/" class="nav-home">{{.Config.Name}}</a>
+                <div class="nav-links">
+                    {{if .Config.GitHub}}<a href="{{.Config.GitHub}}" target="_blank">GitHub</a>{{end}}
+                    {{if .Config.Bluesky}}<a href="{{.Config.Bluesky}}" target="_blank">Bluesky</a>{{end}}
+                </div>
+            </nav>
+        </header>
+
+        <div class="post-header">
+            <a href="../index.html" class="post-back">← Writing</a>
             <h1>{{.Post.Title}}</h1>
-            <div class="date">{{.Post.Date}}</div>
-            {{if .Post.Tags}}
-            <div class="tags" style="margin: 1rem 0;">
-                {{range .Post.Tags}}
-                <span class="tag">{{.}}</span>
-                {{end}}
-            </div>
-            {{end}}
-            <div>
-                {{.Post.Content}}
-            </div>
-            <div style="margin-top: 3rem;">
-                <a href="../index.html#blog" class="btn">← Back to Blog</a>
-            </div>
-        </article>
-    </main>
+            <p class="meta">{{.Post.Date}}{{if .Post.Tags}} · {{range $i, $v := .Post.Tags}}{{if $i}}, {{end}}{{$v}}{{end}}{{end}}</p>
+        </div>
+
+        <div class="post-body">
+            {{.Post.Content}}
+        </div>
+
+        <footer>
+            <p>{{.Config.Name}}</p>
+        </footer>
+    </div>
 </body>
 </html>

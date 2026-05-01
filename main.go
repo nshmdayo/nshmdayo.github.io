@@ -27,11 +27,27 @@ type Post struct {
 	ParsedDate  time.Time
 }
 
+type SkillCategory struct {
+	Category string   `yaml:"category"`
+	Items    []string `yaml:"items"`
+}
+
+type Project struct {
+	Title       string   `yaml:"title"`
+	Description string   `yaml:"description"`
+	Tech        []string `yaml:"tech"`
+	GitHub      string   `yaml:"github"`
+	URL         string   `yaml:"url"`
+}
+
 type Config struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-	GitHub      string `yaml:"github"`
-	Bluesky     string `yaml:"Bluesky"`
+	Name        string          `yaml:"name"`
+	Description string          `yaml:"description"`
+	GitHub      string          `yaml:"github"`
+	Bluesky     string          `yaml:"Bluesky"`
+	About       string          `yaml:"about"`
+	Skills      []SkillCategory `yaml:"skills"`
+	Projects    []Project       `yaml:"projects"`
 }
 
 type PageData struct {
@@ -61,12 +77,10 @@ var indexArt = OutputFile{name: "index", root: "artifact/", dir: "", extension: 
 var blogDoc = OutputFile{name: "", root: "artifact/", dir: "blog/", extension: ".html"}
 
 func main() {
-	// コマンドラインフラグの定義
 	serve := flag.Bool("serve", false, "ローカルサーバーを起動してプレビュー")
 	port := flag.String("port", "8000", "サーバーのポート番号")
 	flag.Parse()
 
-	// サーバーモードの場合
 	if *serve {
 		startServer(*port)
 		return
@@ -80,12 +94,10 @@ func buildSite() {
 	os.MkdirAll(indexArt.root+indexArt.dir, 0755)
 	os.MkdirAll(styleArt.root+styleArt.dir, 0755)
 
-	// 設定ファイルの読み込み
 	config, err := loadConfig("config.yaml")
 	if err != nil {
 	}
 
-	// ブログ記事の読み込み
 	posts, _ := loadPosts("content/blog")
 
 	generateCSS(styleTpl, styleArt)
