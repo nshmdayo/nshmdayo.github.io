@@ -43,8 +43,6 @@ type Project struct {
 type Config struct {
 	Name        string          `yaml:"name"`
 	Description string          `yaml:"description"`
-	GitHub      string          `yaml:"github"`
-	Bluesky     string          `yaml:"Bluesky"`
 	About       string          `yaml:"about"`
 	Skills      []SkillCategory `yaml:"skills"`
 	Projects    []Project       `yaml:"projects"`
