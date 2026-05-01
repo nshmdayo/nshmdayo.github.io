@@ -67,9 +67,57 @@ nav {
     color: var(--text);
 }
 
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:first-child {
+    padding-left: 0;
+}
+
+.tab-btn:hover {
+    color: var(--text);
+}
+
+.tab-btn.active {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
+/* Tab panels */
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.empty-state {
+    font-size: 0.875rem;
+    color: var(--text-dimmer);
+    padding: 1.5rem 0;
+}
+
 /* Main */
 main {
-    padding: 72px 0 80px;
+    padding: 48px 0 80px;
     display: flex;
     flex-direction: column;
     gap: 60px;
