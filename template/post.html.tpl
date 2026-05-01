@@ -12,10 +12,6 @@
         <header>
             <nav>
                 <a href="/" class="nav-home">{{.Config.Name}}</a>
-                <div class="nav-links">
-                    {{if .Config.GitHub}}<a href="{{.Config.GitHub}}" target="_blank">GitHub</a>{{end}}
-                    {{if .Config.Bluesky}}<a href="{{.Config.Bluesky}}" target="_blank">Bluesky</a>{{end}}
-                </div>
             </nav>
         </header>
 
