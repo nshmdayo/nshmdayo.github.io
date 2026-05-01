@@ -3,18 +3,26 @@ description: "Software Engineer / Human-Computer Interaction Enthusiast"
 about: "As a software engineer, I am passionate about building easy-to-use products. I have a keen interest in Human-Computer Interaction and value bridging the gap between technology and people."
 
 projects:
-  - title: "nshmdayo.github.io"
-    description: "A simple static site generator built with Go. Generates portfolios and blogs using templates and YAML configuration."
-    tech: ["Go", "HTML", "CSS"]
+  - title: "ForceIt"
+    description: "ForceIt is an experimental body-based interaction system for ambient spaces. The project proposes an interaction model where a user’s body movement is captured and translated into visual physical effects in a virtual environment. The repository README describes the concept as “Body-based Interaction Methods and Systems for Ambient Space.”
+
+The system uses a Kinect-based skeleton tracking pipeline and a JavaFX 3D visualization. A Kinect device captures depth and skeleton data, selects a tracked user, and extracts body joints such as the hands, spine, and shoulders. The JavaFX application then renders a wall made of many small spherical particles in 3D space.
+
+The main interaction is based on the user’s right-hand movement. When the right hand is detected in an open state, the system calculates a force vector from the right shoulder to the right hand. It then generates many small “force particles” from the hand position. These particles move through the 3D scene and collide with the particle wall, causing the wall to deform or react as if it were receiving physical force from the user’s body motion.
+
+Architecturally, the project consists of several Java classes: Main.java handles the JavaFX scene, animation loop, calibration, force generation, collision detection, and particle movement; KinectDevice.java handles Kinect initialization and skeleton acquisition; Perticle.java represents moving spherical particles; Vec.java provides basic 3D vector operations; and ParamWindow.java provides sliders for adjusting the camera position.
+
+In short, ForceIt is a Kinect-driven interactive installation prototype that converts full-body motion into simulated force and visualizes that force through a deformable 3D particle wall."
+    tech: ["Java", "Kinect"]
     github: "https://github.com/nshmdayo/nshmdayo.github.io"
     url: ""
   - title: "HCI Research Tool"
-    description: "A research tool for evaluating the usability of user interfaces. Features heatmap and operation log visualization."
-    tech: ["TypeScript", "React", "Python"]
+    description: ""
+    tech: []
     github: ""
     url: ""
-  - title: "Dev Automation Scripts"
-    description: "A collection of CLI tools for automating development workflows. Designed to assist with code reviews and streamline release processes."
-    tech: ["Go", "Shell"]
+  - title: "Dev Automation Tools"
+    description: ""
+    tech: []
     github: ""
     url: ""
