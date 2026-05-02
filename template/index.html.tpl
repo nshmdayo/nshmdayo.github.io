@@ -15,6 +15,7 @@
             </nav>
             <div class="tabs">
                 <button class="tab-btn active" data-tab="about">About</button>
+                <button class="tab-btn" data-tab="projects">Projects</button>
                 <button class="tab-btn" data-tab="blog">Blog</button>
             </div>
         </header>
