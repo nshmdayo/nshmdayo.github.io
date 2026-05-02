@@ -26,9 +26,6 @@
                     <p>{{.Config.Description}}</p>
                     {{if .Config.About}}<p class="about">{{.Config.About}}</p>{{end}}
                 </section>
-            </div>
-
-            <div class="tab-panel" id="tab-projects">
 {{if .Config.Projects}}
                 <section>
                     <ul class="project-list">
