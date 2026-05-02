@@ -15,7 +15,6 @@
             </nav>
             <div class="tabs">
                 <button class="tab-btn active" data-tab="about">About</button>
-                <button class="tab-btn" data-tab="projects">Projects</button>
                 <button class="tab-btn" data-tab="blog">Blog</button>
             </div>
         </header>
@@ -27,9 +26,6 @@
                     <p>{{.Config.Description}}</p>
                     {{if .Config.About}}<p class="about">{{.Config.About}}</p>{{end}}
                 </section>
-            </div>
-
-            <div class="tab-panel" id="tab-projects">
 {{if .Config.Projects}}
                 <section>
                     <ul class="project-list">
