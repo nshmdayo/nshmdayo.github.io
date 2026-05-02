@@ -91,9 +91,11 @@ func buildSite() {
 	os.MkdirAll(indexArt.root, 0755)
 	os.MkdirAll(indexArt.root+indexArt.dir, 0755)
 	os.MkdirAll(styleArt.root+styleArt.dir, 0755)
+	os.MkdirAll(blogDoc.root+blogDoc.dir, 0755)
 
 	config, err := loadConfig("config.yaml")
 	if err != nil {
+		log.Fatalf("Error loading config.yaml: %v", err)
 	}
 
 	posts, _ := loadPosts("content/blog")
@@ -105,9 +107,7 @@ func buildSite() {
 }
 
 func startServer(port string) {
-	if _, err := os.Stat("artifact"); os.IsNotExist(err) {
-		buildSite()
-	}
+	buildSite()
 
 	fs := http.FileServer(http.Dir("artifact"))
 	http.Handle("/", fs)
@@ -240,7 +240,7 @@ func generateBlogPages(config Config, posts []Post) {
 	}
 
 	for _, post := range posts {
-		f, err := os.Create(filepath.Join("docs/blog", post.Slug+".html"))
+		f, err := os.Create(filepath.Join(blogDoc.root+blogDoc.dir, post.Slug+".html"))
 		if err != nil {
 			log.Printf("Error creating post %s: %v", post.Slug, err)
 			continue
