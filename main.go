@@ -62,8 +62,47 @@ func main() {
 	buildSite()
 
 	if *serve {
+		go watchAndRebuild()
 		http.Handle("/", http.FileServer(http.Dir("artifact")))
 		log.Fatal(http.ListenAndServe(":"+*port, nil))
+	}
+}
+
+func watchAndRebuild() {
+	watchPaths := []string{
+		"config.yaml",
+		"template/index.html.tpl",
+		"template/post.html.tpl",
+		"template/style.css.tpl",
+		"content/blog",
+	}
+
+	type fileState struct {
+		modTime time.Time
+		size    int64
+	}
+
+	snapshot := func() map[string]fileState {
+		state := make(map[string]fileState)
+		for _, p := range watchPaths {
+			if info, err := os.Stat(p); err == nil {
+				state[p] = fileState{info.ModTime(), info.Size()}
+			}
+		}
+		return state
+	}
+
+	prev := snapshot()
+	for range time.Tick(500 * time.Millisecond) {
+		curr := snapshot()
+		for _, p := range watchPaths {
+			if curr[p] != prev[p] {
+				log.Println("Change detected, rebuilding...")
+				buildSite()
+				prev = snapshot()
+				break
+			}
+		}
 	}
 }
 
