@@ -86,7 +86,7 @@ func buildSite() {
 	}
 
 	// ブログ記事の読み込み
-	posts, _ := loadPosts("content/blog")
+	posts, _ := loadPosts("content/post")
 
 	generateCSS(styleTpl, styleArt)
 
