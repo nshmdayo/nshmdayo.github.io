@@ -54,9 +54,12 @@ func main() {
 	flag.Parse()
 
 	if *serve {
+		buildSite()
 		go watchAndRebuild()
 		http.Handle("/", http.FileServer(http.Dir("artifact")))
 		log.Fatal(http.ListenAndServe(":"+*port, nil))
+	} else {
+		buildSite()
 	}
 }
 
@@ -99,7 +102,7 @@ func watchAndRebuild() {
 }
 
 func buildSite() {
-	for _, dir := range []string{"artifact/css", "artifact/blog"} {
+	for _, dir := range []string{"artifact/css", "artifact/post"} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			log.Fatalf("mkdir %s: %v", dir, err)
 		}
@@ -210,7 +213,7 @@ func generateBlogPages(config Config, posts []Post) {
 	}
 
 	for _, post := range posts {
-		f, err := os.Create(filepath.Join("artifact/blog", post.Slug+".html"))
+		f, err := os.Create(filepath.Join("artifact/post", post.Slug+".html"))
 		if err != nil {
 			log.Printf("Error creating post %s: %v", post.Slug, err)
 			continue
