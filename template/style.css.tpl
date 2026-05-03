@@ -192,6 +192,35 @@ article pre code {
     padding: 0;
 }
 
+footer {
+    margin-top: 6rem;
+    padding: 2rem 0;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #2563eb;
+}
+
 @media (max-width: 768px) {
     .hero h2 {
         font-size: 1.8rem;
@@ -207,5 +236,11 @@ article pre code {
     
     article {
         padding: 1.5rem;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
     }
 }
