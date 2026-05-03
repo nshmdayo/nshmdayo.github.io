@@ -31,7 +31,7 @@ go mod download
 go run main.go
 ```
 
-The generated site will be output to the `docs/` directory.
+The generated site will be output to the `artifact/` directory.
 
 ### Local Preview
 
@@ -93,16 +93,13 @@ Write your post in Markdown.
 ├── go.mod                  # Go module definition
 ├── config.yaml             # Site configuration
 ├── content/
-│   ├── blog/              # Blog posts (Markdown)
-│   │   ├── hello-world.md
-│   │   └── golang-best-practices.md
-├── docs/                  # Generated HTML (for GitHub Pages)
+│   └── post/              # Blog posts (Markdown)
+├── artifact/              # Generated HTML (for GitHub Pages)
 │   ├── index.html
 │   ├── css/
 │   │   └── style.css
 │   └── blog/
-│       ├── hello-world.html
-│       └── golang-best-practices.html
+│       └── *.html
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml     # GitHub Actions configuration
