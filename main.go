@@ -18,6 +18,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const postDir = "content/post"
+
 var md = goldmark.New()
 
 type Post struct {
@@ -86,12 +88,11 @@ func watchAndRebuild() {
 				state[p] = fileState{info.ModTime(), info.Size()}
 			}
 		}
-		entries, _ := os.ReadDir("content/post")
+		entries, _ := os.ReadDir(postDir)
 		for _, e := range entries {
 			if !e.IsDir() && strings.HasSuffix(e.Name(), ".md") {
-				p := filepath.Join("content/post", e.Name())
-				if info, err := os.Stat(p); err == nil {
-					state[p] = fileState{info.ModTime(), info.Size()}
+				if info, err := e.Info(); err == nil {
+					state[filepath.Join(postDir, e.Name())] = fileState{info.ModTime(), info.Size()}
 				}
 			}
 		}
@@ -104,11 +105,13 @@ func watchAndRebuild() {
 	prev := snapshot()
 	for range ticker.C {
 		curr := snapshot()
-		rebuild := false
-		for p, cs := range curr {
-			if prev[p] != cs {
-				rebuild = true
-				break
+		rebuild := len(curr) != len(prev)
+		if !rebuild {
+			for p, cs := range curr {
+				if prev[p] != cs {
+					rebuild = true
+					break
+				}
 			}
 		}
 		if rebuild {
@@ -131,7 +134,7 @@ func buildSite() {
 		log.Fatalf("load config: %v", err)
 	}
 
-	posts, err := loadPosts("content/post")
+	posts, err := loadPosts(postDir)
 	if err != nil {
 		log.Fatalf("load posts: %v", err)
 	}
@@ -219,7 +222,11 @@ func parsePost(path string) (Post, error) {
 		return Post{}, err
 	}
 
-	post.ParsedDate, _ = time.Parse("2006-01-02", post.Date)
+	var dateErr error
+	post.ParsedDate, dateErr = time.Parse("2006-01-02", post.Date)
+	if dateErr != nil {
+		log.Printf("warning: %s: invalid date %q", path, post.Date)
+	}
 
 	var buf bytes.Buffer
 	if err := md.Convert(parts[2], &buf); err != nil {

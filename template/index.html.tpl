@@ -28,7 +28,7 @@
                 </section>
 {{if .Config.Projects}}
                 <section>
-                    <h2 class="section-heading">Projects</h2>
+                    <h2>Projects</h2>
                     <ul class="project-list">
                         {{range .Config.Projects}}
                         <li class="project-item">
