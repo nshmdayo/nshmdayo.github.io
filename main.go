@@ -27,11 +27,6 @@ type Post struct {
 	ParsedDate  time.Time
 }
 
-type SkillCategory struct {
-	Category string   `yaml:"category"`
-	Items    []string `yaml:"items"`
-}
-
 type Project struct {
 	Title       string   `yaml:"title"`
 	Description string   `yaml:"description"`
@@ -44,7 +39,6 @@ type Config struct {
 	Name        string          `yaml:"name"`
 	Description string          `yaml:"description"`
 	About       string          `yaml:"about"`
-	Skills      []SkillCategory `yaml:"skills"`
 	Projects    []Project       `yaml:"projects"`
 }
 

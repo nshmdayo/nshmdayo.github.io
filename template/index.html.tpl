@@ -15,7 +15,7 @@
             </nav>
             <div class="tabs">
                 <button class="tab-btn active" data-tab="about">About</button>
-                <button class="tab-btn" data-tab="blog">Blog</button>
+                <button class="tab-btn" data-tab="post">Blog</button>
             </div>
         </header>
 
@@ -47,13 +47,13 @@
 {{end}}
             </div>
 
-            <div class="tab-panel" id="tab-blog">
+            <div class="tab-panel" id="tab-post">
             {{if .Posts}}
                 <section>
                     <ul class="post-list">
                         {{range .Posts}}
                         <li class="post-item">
-                            <a href="blog/{{.Slug}}.html">{{.Title}}</a>
+                            <a href="post/{{.Slug}}.html">{{.Title}}</a>
                             <span class="post-date">{{.Date}}</span>
                         </li>
                         {{end}}
