@@ -28,7 +28,6 @@
                 </section>
 {{if .Config.Projects}}
                 <section>
-                    <hr class="section-divider">
                     <h2 class="section-heading">Projects</h2>
                     <ul class="project-list">
                         {{range .Config.Projects}}

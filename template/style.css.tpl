@@ -131,16 +131,10 @@ section h2 {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--text-dimmer);
+    color: #fff;
     margin-bottom: 1.25rem;
 }
 
-/* Section divider */
-.section-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin-bottom: 1.5rem;
-}
 
 /* Projects */
 .project-list {
@@ -155,9 +149,6 @@ section h2 {
     border-top: 1px solid var(--border);
 }
 
-.project-item:last-child {
-    border-bottom: 1px solid var(--border);
-}
 
 .project-title-row {
     display: flex;
@@ -243,7 +234,9 @@ section h2 {
 
 /* Footer */
 footer {
-    padding: 32px 0 40px;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 24px 40px;
     border-top: 1px solid var(--border);
     font-size: 0.8rem;
     color: var(--text-dimmer);
