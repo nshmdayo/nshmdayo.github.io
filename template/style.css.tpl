@@ -131,7 +131,7 @@ section h2 {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--text-dimmer);
+    color: #fff;
     margin-bottom: 1.25rem;
 }
 
