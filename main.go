@@ -40,33 +40,11 @@ type PageData struct {
 	Post   *Post
 }
 
-type TemplateFile struct {
-	name      string
-	root      string
-	extension string
-}
-
-type OutputFile struct {
-	name      string
-	root      string
-	dir       string
-	extension string
-}
-
-var styleTpl = TemplateFile{name: "style", root: "template/", extension: ".css"}
-var indexTpl = TemplateFile{name: "index", root: "template/", extension: ".html"}
-var postTpl = TemplateFile{name: "post", root: "template/", extension: ".html"}
-var styleArt = OutputFile{name: "style", root: "artifact/", dir: "css/", extension: ".css"}
-var indexArt = OutputFile{name: "index", root: "artifact/", dir: "", extension: ".html"}
-var blogDoc = OutputFile{name: "", root: "artifact/", dir: "blog/", extension: ".html"}
-
 func main() {
-	// コマンドラインフラグの定義
-	serve := flag.Bool("serve", false, "ローカルサーバーを起動してプレビュー")
-	port := flag.String("port", "8000", "サーバーのポート番号")
+	serve := flag.Bool("serve", false, "start local server for preview")
+	port := flag.String("port", "8000", "server port")
 	flag.Parse()
 
-	// サーバーモードの場合
 	if *serve {
 		startServer(*port)
 		return
@@ -76,21 +54,25 @@ func main() {
 }
 
 func buildSite() {
-	os.MkdirAll(indexArt.root, 0755)
-	os.MkdirAll(indexArt.root+indexArt.dir, 0755)
-	os.MkdirAll(styleArt.root+styleArt.dir, 0755)
-
-	// 設定ファイルの読み込み
-	config, err := loadConfig("config.yaml")
-	if err != nil {
+	for _, dir := range []string{"artifact/css", "artifact/blog"} {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			log.Fatalf("mkdir %s: %v", dir, err)
+		}
 	}
 
-	// ブログ記事の読み込み
+	config, err := loadConfig("config.yaml")
+	if err != nil {
+		log.Fatalf("load config: %v", err)
+	}
+
 	posts, _ := loadPosts("content/post")
 
-	generateCSS(styleTpl, styleArt)
-
-	generateIndexPage(indexTpl, indexArt, config, posts)
+	if err := renderTemplate("template/style.css.tpl", "artifact/css/style.css", nil); err != nil {
+		log.Fatalf("render style: %v", err)
+	}
+	if err := renderTemplate("template/index.html.tpl", "artifact/index.html", PageData{Config: config, Posts: posts}); err != nil {
+		log.Fatalf("render index: %v", err)
+	}
 	generateBlogPages(config, posts)
 }
 
@@ -98,15 +80,23 @@ func startServer(port string) {
 	if _, err := os.Stat("artifact"); os.IsNotExist(err) {
 		buildSite()
 	}
-
-	fs := http.FileServer(http.Dir("artifact"))
-	http.Handle("/", fs)
-
-	addr := ":" + port
-
-	if err := http.ListenAndServe(addr, nil); err != nil {
+	http.Handle("/", http.FileServer(http.Dir("artifact")))
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func renderTemplate(tplPath, outPath string, data any) error {
+	tmpl, err := template.ParseFiles(tplPath)
+	if err != nil {
+		return err
+	}
+	f, err := os.Create(outPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	return tmpl.Execute(f, data)
 }
 
 func loadConfig(path string) (Config, error) {
@@ -114,17 +104,14 @@ func loadConfig(path string) (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
-
 	var config Config
 	err = yaml.Unmarshal(data, &config)
 	return config, err
 }
 
 func loadPosts(dir string) ([]Post, error) {
-	var posts []Post
-
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		return posts, nil
+		return nil, nil
 	}
 
 	entries, err := os.ReadDir(dir)
@@ -132,17 +119,16 @@ func loadPosts(dir string) ([]Post, error) {
 		return nil, err
 	}
 
+	var posts []Post
 	for _, entry := range entries {
 		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".md") {
 			continue
 		}
-
 		post, err := parsePost(filepath.Join(dir, entry.Name()))
 		if err != nil {
 			log.Printf("Error parsing post %s: %v", entry.Name(), err)
 			continue
 		}
-
 		post.Slug = strings.TrimSuffix(entry.Name(), ".md")
 		posts = append(posts, post)
 	}
@@ -166,61 +152,19 @@ func parsePost(path string) (Post, error) {
 	}
 
 	var post Post
-	err = yaml.Unmarshal(parts[1], &post)
-	if err != nil {
+	if err := yaml.Unmarshal(parts[1], &post); err != nil {
 		return Post{}, err
 	}
 
 	post.ParsedDate, _ = time.Parse("2006-01-02", post.Date)
 
 	var buf bytes.Buffer
-	md := goldmark.New()
-	if err := md.Convert(parts[2], &buf); err != nil {
+	if err := goldmark.New().Convert(parts[2], &buf); err != nil {
 		return Post{}, err
 	}
 	post.Content = template.HTML(buf.String())
 
 	return post, nil
-}
-
-func generateCSS(input TemplateFile, output OutputFile) {
-	tmpl, err := template.ParseFiles(input.root + input.name + input.extension + ".tpl")
-	if err != nil {
-		log.Fatalf("Error parsing %s: %v", input.root+input.name+input.extension+".tpl", err)
-	}
-
-	f, err := os.Create(output.root + output.dir + output.name + output.extension)
-	if err != nil {
-		log.Fatalf("Error creating %s: %v", output.root+output.dir+output.name+output.extension+".tpl", err)
-	}
-	defer f.Close()
-
-	if err := tmpl.Execute(f, nil); err != nil {
-		log.Fatalf("Error executing template: %v", err)
-	}
-}
-
-func generateIndexPage(input TemplateFile, output OutputFile, config Config, posts []Post) {
-	tmpl, err := template.ParseFiles(input.root + input.name + input.extension + ".tpl")
-	if err != nil {
-		log.Fatalf("Error parsing index.html.tpl: %v", err)
-	}
-
-	f, err := os.Create(output.root + output.dir + output.name + output.extension)
-	if err != nil {
-		log.Fatalf("Error creating %s: %v", output.root+output.dir+output.name+output.extension+".tpl", err)
-	}
-	defer f.Close()
-
-	data := PageData{
-		Config: config,
-		Posts:  posts,
-	}
-
-	err = tmpl.Execute(f, data)
-	if err != nil {
-		log.Fatalf("Error executing template: %v", err)
-	}
 }
 
 func generateBlogPages(config Config, posts []Post) {
@@ -230,19 +174,12 @@ func generateBlogPages(config Config, posts []Post) {
 	}
 
 	for _, post := range posts {
-		f, err := os.Create(filepath.Join("docs/blog", post.Slug+".html"))
+		f, err := os.Create(filepath.Join("artifact/blog", post.Slug+".html"))
 		if err != nil {
 			log.Printf("Error creating post %s: %v", post.Slug, err)
 			continue
 		}
-
-		data := PageData{
-			Config: config,
-			Post:   &post,
-		}
-
-		err = tmpl.Execute(f, data)
-		if err != nil {
+		if err := tmpl.Execute(f, PageData{Config: config, Post: &post}); err != nil {
 			log.Printf("Error executing template for post %s: %v", post.Slug, err)
 		}
 		f.Close()
