@@ -70,7 +70,7 @@ github: "https://github.com/yourusername"
 
 ### Adding Blog Posts
 
-Add `.md` files to the `content/blog/` directory.
+Add `.md` files to the `content/post/` directory.
 
 ```markdown
 ---

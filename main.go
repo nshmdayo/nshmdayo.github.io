@@ -74,7 +74,7 @@ func watchAndRebuild() {
 		"template/index.html.tpl",
 		"template/post.html.tpl",
 		"template/style.css.tpl",
-		"content/blog",
+		"content/post",
 	}
 
 	type fileState struct {
@@ -118,7 +118,7 @@ func buildSite() {
 		log.Fatalf("Error loading config.yaml: %v", err)
 	}
 
-	posts, _ := loadPosts("content/blog")
+	posts, _ := loadPosts("content/post")
 
 	if err := renderTemplate("template/style.css.tpl", "artifact/css/style.css", nil); err != nil {
 		log.Fatalf("Error generating CSS: %v", err)
