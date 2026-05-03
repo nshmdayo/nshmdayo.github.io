@@ -127,7 +127,7 @@ main {
 
 /* Section headings */
 section h2 {
-    font-size: 0.75rem;
+    font-size: 1.4rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
