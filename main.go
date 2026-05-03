@@ -66,7 +66,7 @@ func watchAndRebuild() {
 		"template/index.html.tpl",
 		"template/post.html.tpl",
 		"template/style.css.tpl",
-		"content/blog",
+		"content/post",
 	}
 
 	type fileState struct {
@@ -120,20 +120,6 @@ func buildSite() {
 	}
 
 	generateBlogPages(config, posts)
-}
-
-func renderTemplate(tplPath, outPath string, data any) error {
-	tmpl, err := template.ParseFiles(tplPath)
-	if err != nil {
-		return err
-	}
-
-	http.Handle("/", http.FileServer(http.Dir("artifact")))
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-	return tmpl.Execute(f, data)
 }
 
 func renderTemplate(tplPath, outPath string, data any) error {
