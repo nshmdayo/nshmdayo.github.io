@@ -27,11 +27,19 @@ type Post struct {
 	ParsedDate  time.Time
 }
 
+type Project struct {
+	Title       string   `yaml:"title"`
+	Description string   `yaml:"description"`
+	Tech        []string `yaml:"tech"`
+	GitHub      string   `yaml:"github"`
+	URL         string   `yaml:"url"`
+}
+
 type Config struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-	GitHub      string `yaml:"github"`
-	Bluesky     string `yaml:"Bluesky"`
+	Name        string          `yaml:"name"`
+	Description string          `yaml:"description"`
+	About       string          `yaml:"about"`
+	Projects    []Project       `yaml:"projects"`
 }
 
 type PageData struct {
@@ -46,11 +54,48 @@ func main() {
 	flag.Parse()
 
 	if *serve {
-		startServer(*port)
-		return
+		go watchAndRebuild()
+		http.Handle("/", http.FileServer(http.Dir("artifact")))
+		log.Fatal(http.ListenAndServe(":"+*port, nil))
+	}
+}
+
+func watchAndRebuild() {
+	watchPaths := []string{
+		"config.yaml",
+		"template/index.html.tpl",
+		"template/post.html.tpl",
+		"template/style.css.tpl",
+		"content/blog",
 	}
 
-	buildSite()
+	type fileState struct {
+		modTime time.Time
+		size    int64
+	}
+
+	snapshot := func() map[string]fileState {
+		state := make(map[string]fileState)
+		for _, p := range watchPaths {
+			if info, err := os.Stat(p); err == nil {
+				state[p] = fileState{info.ModTime(), info.Size()}
+			}
+		}
+		return state
+	}
+
+	prev := snapshot()
+	for range time.Tick(500 * time.Millisecond) {
+		curr := snapshot()
+		for _, p := range watchPaths {
+			if curr[p] != prev[p] {
+				log.Println("Change detected, rebuilding...")
+				buildSite()
+				prev = snapshot()
+				break
+			}
+		}
+	}
 }
 
 func buildSite() {
@@ -73,17 +118,22 @@ func buildSite() {
 	if err := renderTemplate("template/index.html.tpl", "artifact/index.html", PageData{Config: config, Posts: posts}); err != nil {
 		log.Fatalf("render index: %v", err)
 	}
+
 	generateBlogPages(config, posts)
 }
 
-func startServer(port string) {
-	if _, err := os.Stat("artifact"); os.IsNotExist(err) {
-		buildSite()
+func renderTemplate(tplPath, outPath string, data any) error {
+	tmpl, err := template.ParseFiles(tplPath)
+	if err != nil {
+		return err
 	}
+
 	http.Handle("/", http.FileServer(http.Dir("artifact")))
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
+	defer f.Close()
+	return tmpl.Execute(f, data)
 }
 
 func renderTemplate(tplPath, outPath string, data any) error {

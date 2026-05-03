@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Post.Title}} - {{.Config.Name}}</title>
+    <title>{{.Post.Title}} — {{.Config.Name}}</title>
     <meta name="description" content="{{.Post.Description}}">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <main class="container">
-        <article>
+    <div class="page">
+        <header>
+            <nav>
+                <a href="/" class="nav-home">{{.Config.Name}}</a>
+            </nav>
+        </header>
+
+        <div class="post-header">
+            <a href="../index.html" class="post-back">← Writing</a>
             <h1>{{.Post.Title}}</h1>
             <div class="date">{{.Post.Date}}</div>
             {{if .Post.Tags}}
