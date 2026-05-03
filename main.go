@@ -49,11 +49,9 @@ type PageData struct {
 }
 
 func main() {
-	serve := flag.Bool("serve", false, "Start local server for preview")
-	port := flag.String("port", "8000", "Server port number")
+	serve := flag.Bool("serve", false, "start local server for preview")
+	port := flag.String("port", "8000", "server port")
 	flag.Parse()
-
-	buildSite()
 
 	if *serve {
 		go watchAndRebuild()
@@ -103,26 +101,39 @@ func watchAndRebuild() {
 func buildSite() {
 	for _, dir := range []string{"artifact/css", "artifact/blog"} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			log.Fatalf("Error creating directory %s: %v", dir, err)
+			log.Fatalf("mkdir %s: %v", dir, err)
 		}
 	}
 
 	config, err := loadConfig("config.yaml")
 	if err != nil {
-		log.Fatalf("Error loading config.yaml: %v", err)
+		log.Fatalf("load config: %v", err)
 	}
 
-	posts, _ := loadPosts("content/blog")
+	posts, _ := loadPosts("content/post")
 
 	if err := renderTemplate("template/style.css.tpl", "artifact/css/style.css", nil); err != nil {
-		log.Fatalf("Error generating CSS: %v", err)
+		log.Fatalf("render style: %v", err)
 	}
-
 	if err := renderTemplate("template/index.html.tpl", "artifact/index.html", PageData{Config: config, Posts: posts}); err != nil {
-		log.Fatalf("Error generating index: %v", err)
+		log.Fatalf("render index: %v", err)
 	}
 
 	generateBlogPages(config, posts)
+}
+
+func renderTemplate(tplPath, outPath string, data any) error {
+	tmpl, err := template.ParseFiles(tplPath)
+	if err != nil {
+		return err
+	}
+
+	http.Handle("/", http.FileServer(http.Dir("artifact")))
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	return tmpl.Execute(f, data)
 }
 
 func renderTemplate(tplPath, outPath string, data any) error {

@@ -379,35 +379,22 @@ footer p {
     font-size: 0.875rem;
 }
 
-.post-body img {
-    max-width: 100%;
-    border-radius: 4px;
-    margin: 1.5rem 0;
+footer {
+    margin-top: 6rem;
+    padding: 2rem 0;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 0.875rem;
 }
 
-.post-body ul,
-.post-body ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1.2rem;
-}
+@media (max-width: 768px) {
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    
+    nav ul {
+        gap: 1rem;
 
-.post-body li {
-    margin-bottom: 0.3rem;
-    color: var(--text);
-}
-
-.post-body blockquote {
-    border-left: 2px solid var(--border);
-    padding-left: 1rem;
-    color: var(--text-dim);
-    margin: 1.5rem 0;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .skill-row {
-        flex-direction: column;
-        gap: 0.2rem;
     }
 
     .skill-category {

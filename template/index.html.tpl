@@ -63,25 +63,14 @@
                 <p class="empty-state">No posts yet.</p>
             {{end}}
             </div>
-        </main>
+        </section>
+        {{end}}
+    </main>
 
-        <footer>
-            <p>{{.Config.Name}}</p>
-        </footer>
-    </div>
-
-    <script>
-        const btns = document.querySelectorAll('.tab-btn');
-        const panels = document.querySelectorAll('.tab-panel');
-
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btns.forEach(b => b.classList.remove('active'));
-                panels.forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-            });
-        });
-    </script>
+    <footer>
+        <div class="container">
+            <span>© 2026 {{.Config.Name}}</span>
+        </div>
+    </footer>
 </body>
 </html>

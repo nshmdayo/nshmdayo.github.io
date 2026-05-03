@@ -18,16 +18,27 @@
         <div class="post-header">
             <a href="../index.html" class="post-back">← Writing</a>
             <h1>{{.Post.Title}}</h1>
-            <p class="meta">{{.Post.Date}}{{if .Post.Tags}} · {{range $i, $v := .Post.Tags}}{{if $i}}, {{end}}{{$v}}{{end}}{{end}}</p>
-        </div>
+            <div class="date">{{.Post.Date}}</div>
+            {{if .Post.Tags}}
+            <div class="tags" style="margin: 1rem 0;">
+                {{range .Post.Tags}}
+                <span class="tag">{{.}}</span>
+                {{end}}
+            </div>
+            {{end}}
+            <div>
+                {{.Post.Content}}
+            </div>
+            <div style="margin-top: 3rem;">
+                <a href="../index.html#blog" class="btn">← Back to Blog</a>
+            </div>
+        </article>
+    </main>
 
-        <div class="post-body">
-            {{.Post.Content}}
+    <footer>
+        <div class="container">
+            <span>© 2026 {{.Config.Name}}</span>
         </div>
-
-        <footer>
-            <p>{{.Config.Name}}</p>
-        </footer>
-    </div>
+    </footer>
 </body>
 </html>
