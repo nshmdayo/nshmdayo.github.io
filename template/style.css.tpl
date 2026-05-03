@@ -132,6 +132,8 @@ section h2 {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: #fff;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
     margin-bottom: 1.25rem;
 }
 
@@ -147,6 +149,11 @@ section h2 {
 .project-item {
     padding: 1rem 0;
     border-top: 1px solid var(--border);
+}
+
+.project-item:first-child {
+    border-top: none;
+    padding-top: 0;
 }
 
 
