@@ -29,12 +29,8 @@
     </main>
 
     <footer>
-        <div class="container footer-inner">
+        <div class="container">
             <span>© 2026 {{.Config.Name}}</span>
-            <div class="footer-links">
-                {{if .Config.GitHub}}<a href="{{.Config.GitHub}}" target="_blank">GitHub</a>{{end}}
-                {{if .Config.Bluesky}}<a href="{{.Config.Bluesky}}" target="_blank">Bluesky</a>{{end}}
-            </div>
         </div>
     </footer>
 </body>

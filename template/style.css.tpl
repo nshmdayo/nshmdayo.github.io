@@ -200,27 +200,6 @@ footer {
     font-size: 0.875rem;
 }
 
-.footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.footer-links {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.footer-links a {
-    color: #64748b;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.footer-links a:hover {
-    color: #2563eb;
-}
-
 @media (max-width: 768px) {
     .hero h2 {
         font-size: 1.8rem;
@@ -238,9 +217,4 @@ footer {
         padding: 1.5rem;
     }
 
-    .footer-inner {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
 }
