@@ -28,6 +28,8 @@
                 </section>
 {{if .Config.Projects}}
                 <section>
+                    <hr class="section-divider">
+                    <h2 class="section-heading">Projects</h2>
                     <ul class="project-list">
                         {{range .Config.Projects}}
                         <li class="project-item">
@@ -63,12 +65,22 @@
                 <p class="empty-state">No posts yet.</p>
             {{end}}
             </div>
-    </main>
+        </main>
+    </div>
 
     <footer>
-        <div class="container">
-            <span>© 2026 {{.Config.Name}}</span>
-        </div>
+        <span>© 2026 {{.Config.Name}}</span>
     </footer>
+
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
