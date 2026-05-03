@@ -9,8 +9,6 @@
     --text: #d4d4d4;
     --text-dim: #666;
     --text-dimmer: #444;
-    --link: #d4d4d4;
-    --link-hover: #fff;
     --border: #222;
     --accent: #888;
 }
@@ -51,26 +49,9 @@ nav {
     font-size: 0.95rem;
 }
 
-.nav-links {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-links a {
-    font-size: 0.875rem;
-    color: var(--text-dim);
-    text-decoration: none;
-    transition: color 0.15s;
-}
-
-.nav-links a:hover {
-    color: var(--text);
-}
-
 /* Tabs */
 .tabs {
     display: flex;
-    gap: 0;
     margin-top: 32px;
     border-bottom: 1px solid var(--border);
 }
@@ -152,29 +133,6 @@ section h2 {
     letter-spacing: 0.1em;
     color: var(--text-dimmer);
     margin-bottom: 1.25rem;
-}
-
-/* Skills */
-.skills {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.skill-row {
-    display: flex;
-    gap: 1.5rem;
-    font-size: 0.875rem;
-}
-
-.skill-category {
-    color: var(--text-dim);
-    min-width: 100px;
-    flex-shrink: 0;
-}
-
-.skill-items {
-    color: var(--text);
 }
 
 /* Section divider */
@@ -287,9 +245,6 @@ section h2 {
 footer {
     padding: 32px 0 40px;
     border-top: 1px solid var(--border);
-}
-
-footer p {
     font-size: 0.8rem;
     color: var(--text-dimmer);
 }
@@ -325,6 +280,20 @@ footer p {
     font-size: 0.85rem;
     color: var(--text-dimmer);
     margin-bottom: 3rem;
+}
+
+.post-header .tags {
+    margin: 1rem 0;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.1em 0.5em;
+    margin-right: 0.4rem;
 }
 
 .post-body {
@@ -386,28 +355,11 @@ footer p {
     font-size: 0.875rem;
 }
 
-footer {
-    margin-top: 6rem;
-    padding: 2rem 0;
-    border-top: 1px solid #e2e8f0;
-    color: #64748b;
-    font-size: 0.875rem;
+.post-footer {
+    margin-top: 3rem;
 }
 
 @media (max-width: 768px) {
-    .hero h2 {
-        font-size: 1.8rem;
-    }
-    
-    nav ul {
-        gap: 1rem;
-
-    }
-
-    .skill-category {
-        min-width: unset;
-    }
-
     .project-title-row {
         flex-direction: column;
         gap: 0.2rem;

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"html/template"
@@ -16,6 +17,8 @@ import (
 	"github.com/yuin/goldmark"
 	"gopkg.in/yaml.v3"
 )
+
+var md = goldmark.New()
 
 type Post struct {
 	Title       string   `yaml:"title"`
@@ -36,10 +39,10 @@ type Project struct {
 }
 
 type Config struct {
-	Name        string          `yaml:"name"`
-	Description string          `yaml:"description"`
-	About       string          `yaml:"about"`
-	Projects    []Project       `yaml:"projects"`
+	Name        string    `yaml:"name"`
+	Description string    `yaml:"description"`
+	About       string    `yaml:"about"`
+	Projects    []Project `yaml:"projects"`
 }
 
 type PageData struct {
@@ -64,12 +67,11 @@ func main() {
 }
 
 func watchAndRebuild() {
-	watchPaths := []string{
+	staticPaths := []string{
 		"config.yaml",
 		"template/index.html.tpl",
 		"template/post.html.tpl",
 		"template/style.css.tpl",
-		"content/post",
 	}
 
 	type fileState struct {
@@ -79,24 +81,40 @@ func watchAndRebuild() {
 
 	snapshot := func() map[string]fileState {
 		state := make(map[string]fileState)
-		for _, p := range watchPaths {
+		for _, p := range staticPaths {
 			if info, err := os.Stat(p); err == nil {
 				state[p] = fileState{info.ModTime(), info.Size()}
+			}
+		}
+		entries, _ := os.ReadDir("content/post")
+		for _, e := range entries {
+			if !e.IsDir() && strings.HasSuffix(e.Name(), ".md") {
+				p := filepath.Join("content/post", e.Name())
+				if info, err := os.Stat(p); err == nil {
+					state[p] = fileState{info.ModTime(), info.Size()}
+				}
 			}
 		}
 		return state
 	}
 
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
+
 	prev := snapshot()
-	for range time.Tick(500 * time.Millisecond) {
+	for range ticker.C {
 		curr := snapshot()
-		for _, p := range watchPaths {
-			if curr[p] != prev[p] {
-				log.Println("Change detected, rebuilding...")
-				buildSite()
-				prev = snapshot()
+		rebuild := false
+		for p, cs := range curr {
+			if prev[p] != cs {
+				rebuild = true
 				break
 			}
+		}
+		if rebuild {
+			log.Println("Change detected, rebuilding...")
+			buildSite()
+			prev = curr
 		}
 	}
 }
@@ -113,7 +131,10 @@ func buildSite() {
 		log.Fatalf("load config: %v", err)
 	}
 
-	posts, _ := loadPosts("content/post")
+	posts, err := loadPosts("content/post")
+	if err != nil {
+		log.Fatalf("load posts: %v", err)
+	}
 
 	if err := renderTemplate("template/style.css.tpl", "artifact/css/style.css", nil); err != nil {
 		log.Fatalf("render style: %v", err)
@@ -125,17 +146,21 @@ func buildSite() {
 	generateBlogPages(config, posts)
 }
 
-func renderTemplate(tplPath, outPath string, data any) error {
-	tmpl, err := template.ParseFiles(tplPath)
-	if err != nil {
-		return err
-	}
+func executeTemplate(tmpl *template.Template, outPath string, data any) error {
 	f, err := os.Create(outPath)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 	return tmpl.Execute(f, data)
+}
+
+func renderTemplate(tplPath, outPath string, data any) error {
+	tmpl, err := template.ParseFiles(tplPath)
+	if err != nil {
+		return err
+	}
+	return executeTemplate(tmpl, outPath, data)
 }
 
 func loadConfig(path string) (Config, error) {
@@ -149,11 +174,10 @@ func loadConfig(path string) (Config, error) {
 }
 
 func loadPosts(dir string) ([]Post, error) {
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
+	entries, err := os.ReadDir(dir)
+	if errors.Is(err, os.ErrNotExist) {
 		return nil, nil
 	}
-
-	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +189,7 @@ func loadPosts(dir string) ([]Post, error) {
 		}
 		post, err := parsePost(filepath.Join(dir, entry.Name()))
 		if err != nil {
-			log.Printf("Error parsing post %s: %v", entry.Name(), err)
+			log.Printf("skipping %s: %v", entry.Name(), err)
 			continue
 		}
 		post.Slug = strings.TrimSuffix(entry.Name(), ".md")
@@ -198,7 +222,7 @@ func parsePost(path string) (Post, error) {
 	post.ParsedDate, _ = time.Parse("2006-01-02", post.Date)
 
 	var buf bytes.Buffer
-	if err := goldmark.New().Convert(parts[2], &buf); err != nil {
+	if err := md.Convert(parts[2], &buf); err != nil {
 		return Post{}, err
 	}
 	post.Content = template.HTML(buf.String())
@@ -209,18 +233,13 @@ func parsePost(path string) (Post, error) {
 func generateBlogPages(config Config, posts []Post) {
 	tmpl, err := template.ParseFiles("template/post.html.tpl")
 	if err != nil {
-		log.Fatalf("Error parsing post.html.tpl: %v", err)
+		log.Fatalf("parse post template: %v", err)
 	}
 
 	for _, post := range posts {
-		f, err := os.Create(filepath.Join("artifact/post", post.Slug+".html"))
-		if err != nil {
-			log.Printf("Error creating post %s: %v", post.Slug, err)
-			continue
+		outPath := filepath.Join("artifact/post", post.Slug+".html")
+		if err := executeTemplate(tmpl, outPath, PageData{Config: config, Post: &post}); err != nil {
+			log.Printf("render post %s: %v", post.Slug, err)
 		}
-		if err := tmpl.Execute(f, PageData{Config: config, Post: &post}); err != nil {
-			log.Printf("Error executing template for post %s: %v", post.Slug, err)
-		}
-		f.Close()
 	}
 }
