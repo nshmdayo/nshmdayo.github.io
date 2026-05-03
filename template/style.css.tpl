@@ -177,6 +177,13 @@ section h2 {
     color: var(--text);
 }
 
+/* Section divider */
+.section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+}
+
 /* Projects */
 .project-list {
     list-style: none;
