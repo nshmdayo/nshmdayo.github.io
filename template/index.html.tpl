@@ -63,8 +63,6 @@
                 <p class="empty-state">No posts yet.</p>
             {{end}}
             </div>
-        </section>
-        {{end}}
     </main>
 
     <footer>
