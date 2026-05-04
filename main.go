@@ -88,8 +88,20 @@ func watchAndRebuild() {
 				state[p] = fileState{info.ModTime(), info.Size()}
 			}
 		}
-		entries, _ := os.ReadDir(postDir)
+		entries, err := os.ReadDir(postDir)
+		if err != nil {
+			if !errors.Is(err, os.ErrNotExist) {
+				log.Printf("warning: read %s: %v", postDir, err)
+			}
+			return state
+		}
 		for _, e := range entries {
+			if !e.IsDir() && strings.HasSuffix(e.Name(), ".md") {
+				if info, err := e.Info(); err == nil {
+					state[filepath.Join(postDir, e.Name())] = fileState{info.ModTime(), info.Size()}
+				}
+			}
+		}
 			if !e.IsDir() && strings.HasSuffix(e.Name(), ".md") {
 				if info, err := e.Info(); err == nil {
 					state[filepath.Join(postDir, e.Name())] = fileState{info.ModTime(), info.Size()}
