@@ -102,12 +102,6 @@ func watchAndRebuild() {
 				}
 			}
 		}
-			if !e.IsDir() && strings.HasSuffix(e.Name(), ".md") {
-				if info, err := e.Info(); err == nil {
-					state[filepath.Join(postDir, e.Name())] = fileState{info.ModTime(), info.Size()}
-				}
-			}
-		}
 		return state
 	}
 
